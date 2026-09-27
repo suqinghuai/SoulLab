@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="theme-color" content="#1A1423">
+  <title>塔罗牌阵 · 命运之境</title>
+  <style>
+    :root{--ink:#F5F0E8;--muted:#8B7E6A;--primary:#C9A962;--accent:#D4AF37;--bg:#1A1423;--line:#3D3428;--paper:rgba(45,38,28,.85);--soft:rgba(201,169,98,.08);--shadow:0 4px 24px rgba(0,0,0,.4)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;background:linear-gradient(145deg,#1A1423,#2A1F33 50%,#1F1728);color:var(--ink);font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+    button,input{font:inherit}
+    button{color:inherit}
+    h1,h2,p{margin-top:0}
+    .shell{width:100%;max-width:680px;margin:auto;padding:20px 16px 56px}
+    .hidden{display:none!important}
+    .card,.q-header,.q-body,.top-card,.report-section{background:var(--paper);box-shadow:var(--shadow);border:1px solid rgba(201,169,98,.12)}
+    .card{border-radius:24px;padding:24px 22px;margin-bottom:18px}
+    .icon-box{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#D4AF37,#C9A962);display:flex;align-items:center;justify-content:center;font-size:34px;color:#1A1423;margin:14px auto 16px;box-shadow:0 8px 28px rgba(201,169,98,.3)}
+    .hero-title{font-size:26px;font-weight:900;text-align:center;line-height:1.35;margin-bottom:7px}
+    .hero-title em{font-style:normal;color:var(--primary)}
+    .hero-sub{font-size:12px;color:#8B7E6A;letter-spacing:3px;font-weight:700;text-align:center;margin-bottom:22px}
+    .lead{font-size:14px;color:#A89880;line-height:1.8;text-align:center;margin-bottom:20px}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 18px}
+    .stat{background:rgba(45,38,28,.6);border-radius:18px;padding:15px 10px;text-align:center;border:1px solid var(--line);color:#8B7E6A;font-size:12px}
+    .stat b{display:block;font-size:18px;color:var(--primary);margin-bottom:3px}
+    .info-box{background:rgba(201,169,98,.08);border-left:3px solid var(--primary);border-radius:14px;padding:13px 16px;color:#A89880;font-size:13px;line-height:1.7;margin-bottom:18px}
+    .eyebrow{font-size:13px;color:var(--primary);font-weight:800;letter-spacing:.08em;margin-bottom:8px}
+    .hint{font-size:13px;color:var(--muted);line-height:1.7}
+    .btn{border:none;border-radius:16px;padding:15px 20px;cursor:pointer;font-weight:800;transition:.15s transform,.15s box-shadow,.15s background}
+    .btn:hover{transform:translateY(-2px)}
+    .btn:focus-visible,.choice:focus-visible,.nav-btn:focus-visible{outline:3px solid rgba(201,169,98,.3);outline-offset:3px}
+    .primary{width:100%;background:linear-gradient(135deg,#D4AF37,#C9A962);color:#1A1423;box-shadow:0 8px 24px rgba(201,169,98,.3);font-size:17px;letter-spacing:1px}
+    .ghost{width:100%;background:rgba(255,255,255,.06);border:2px solid var(--line);color:#A89880}
+    .intro-actions{display:grid;gap:10px}
+    .choices{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+    .choice{width:100%;border:2px solid #3D3428;border-radius:16px;background:var(--soft);padding:16px 18px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px;transition:.16s all}
+    .choice:hover{border-color:var(--accent);background:rgba(201,169,98,.12);transform:translateX(3px)}
+    .choice.selected{border-color:var(--accent);background:rgba(201,169,98,.15);color:var(--primary);box-shadow:0 0 0 3px rgba(201,169,98,.1)}
+    .choice .letter{width:22px;flex:0 0 22px;color:var(--accent);font-size:18px;font-weight:900;text-align:center}
+    .answer .letter{font-size:0}
+    .answer .letter:before{content:"○";font-size:19px}
+    .answer.selected .letter:before{content:"●"}
+    .choice strong{font-size:15px;display:block}
+    .choice small{display:block;color:#8B7E6A;margin-top:4px;font-size:12px;line-height:1.45}
+    .nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:20px}
+    .nav .btn{width:auto}
+    .nav .btn[disabled],.nav-btn[disabled]{opacity:.35;cursor:not-allowed;transform:none}
+    .q-header{border-radius:20px;padding:16px 20px;margin-bottom:20px}
+    .q-meta{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;margin-bottom:10px}
+    .q-cat{font-size:13px;font-weight:800;color:var(--primary)}
+    .q-count{font-size:13px;color:var(--muted)}
+    .q-pct{font-size:13px;font-weight:800;color:var(--accent)}
+    .progress-track{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+    .progress-bar{display:block;height:100%;width:0;background:linear-gradient(90deg,#D4AF37,#C9A962);border-radius:99px;transition:width .38s ease}
+    .q-body{border-radius:24px;padding:28px 24px;margin-bottom:18px;min-height:400px}
+    .q-text{font-size:21px;font-weight:900;line-height:1.45;margin:10px 0 22px}
+    .q-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:22px}
+    .nav-btn{padding:12px 17px;border-radius:14px;border:2px solid var(--line);background:rgba(255,255,255,.06);cursor:pointer;font-size:14px;color:#8B7E6A}
+    .auto-hint{font-size:12px;color:#6B5D4A;flex:1;text-align:center;line-height:1.4;transition:.2s}
+    .auto-hint.active{color:var(--primary);font-weight:700}
+    .result{padding:0}
+    .top-card{border-radius:28px;padding:30px 24px 26px;text-align:center;margin-bottom:18px;border:1px solid rgba(201,169,98,.2)}
+    .top-sub{font-size:15px;color:var(--accent);font-weight:700;margin-bottom:12px;letter-spacing:1px}
+    .top-icon-emoji{font-size:44px;margin-bottom:5px}
+    .match-pct{font-size:64px;font-weight:900;background:linear-gradient(135deg,#D4AF37,#C9A962);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.05}
+    .result-name{font-size:34px;font-weight:900;margin:10px 0 6px;color:var(--primary)}
+    .person-title{font-size:15px;color:#8B7E6A;margin-bottom:16px;line-height:1.6}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+    .tag{background:rgba(201,169,98,.15);color:var(--primary);border:1px solid rgba(201,169,98,.25);border-radius:20px;padding:6px 14px;font-size:14px;font-weight:700}
+    .dominant-chip{display:inline-block;margin:12px 0 0;padding:7px 14px;border-radius:20px;background:rgba(201,169,98,.12);color:var(--primary);font-size:14px;font-weight:700}
+    .match-reason{background:rgba(201,169,98,.06);border-radius:16px;padding:15px 18px;text-align:left;margin-top:16px;border:1px solid rgba(201,169,98,.1)}
+    .reason-title{font-size:15px;font-weight:800;color:var(--primary);display:block;margin-bottom:8px}
+    .quote{font-size:17px;color:#C9B896;line-height:1.85;margin:0;font-style:italic}
+    .report-section{border-radius:24px;padding:23px;margin-bottom:18px;border:1px solid rgba(201,169,98,.12)}
+    .section-title{font-size:19px;font-weight:900;margin-bottom:16px;color:var(--primary)}
+    .bio{font-size:17px;line-height:1.9;color:#C9B896}
+    .three{display:grid;grid-template-columns:1fr;gap:12px}
+    .note{background:rgba(201,169,98,.05);border:1px solid rgba(201,169,98,.15);border-radius:17px;padding:18px 17px;line-height:1.8;color:#A89880;font-size:16px}
+    .note b{display:block;color:var(--ink);margin-bottom:7px;font-size:17px}
+    .share-actions{display:grid;gap:10px;margin:22px 0}
+    .toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);width:max-content;max-width:min(520px,calc(100% - 32px));background:#2D261E;color:#F5F0E8;padding:11px 18px;border-radius:18px;text-align:center;line-height:1.6;opacity:0;pointer-events:none;transition:.25s;z-index:30;border:1px solid rgba(201,169,98,.2)}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    .save-modal{position:fixed;z-index:80;inset:0;display:flex;align-items:flex-start;justify-content:center;padding:18px;background:rgba(26,20,35,.82);overflow:auto}
+    .save-panel{width:min(680px,100%);margin:auto;background:#1F1A14;border-radius:24px;padding:16px;box-shadow:0 24px 70px rgba(0,0,0,.5);border:1px solid rgba(201,169,98,.15)}
+    .save-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+    .save-panel-head h2{margin:0;font-size:20px;color:var(--ink)}
+    .save-close{width:44px;min-height:44px;padding:0;border:0;border-radius:50%;background:rgba(201,169,98,.15);font-size:24px;cursor:pointer;color:var(--primary)}
+    .save-tip{margin:0 2px 14px;color:#8B7E6A;font-size:14px;line-height:1.7}
+    .save-preview{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:16px;-webkit-touch-callout:default;-webkit-user-select:auto;user-select:auto}
+    .micro{font-size:13px;color:#6B5D4A;text-align:center;line-height:1.65}
+    body.locked{overflow:hidden}
+    .app-locked{display:none}
+    .access-gate{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:20px;background:linear-gradient(145deg,#1A1423,#2A1F33)}
+    .access-card{width:min(460px,100%);background:rgba(45,38,28,.9);border-radius:24px;padding:28px 24px;text-align:center;box-shadow:var(--shadow);border:1px solid rgba(201,169,98,.15)}
+    .lock-mark{width:72px;height:72px;border-radius:20px;margin:0 auto 18px;display:grid;place-items:center;background:linear-gradient(135deg,#D4AF37,#C9A962);color:#1A1423;font-size:32px;box-shadow:0 8px 28px rgba(201,169,98,.3)}
+    .access-card h1{font-size:25px;margin-bottom:8px}
+    .access-card p{color:var(--muted);font-size:13px;line-height:1.7}
+    .access-input{display:block;width:100%;margin:20px auto 14px;padding:14px;border:2px solid var(--line);border-radius:14px;background:rgba(26,20,35,.8);text-align:center;font-size:28px;font-weight:800;letter-spacing:12px;color:var(--primary);outline:0}
+    .access-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(201,169,98,.15)}
+    .access-error{min-height:22px;margin:10px 0 0!important;color:#E74C3C!important;font-size:13px;opacity:0}
+    .access-error.show{opacity:1}
+    .card-spread{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+    .spread-slot{aspect-ratio:2/3;background:rgba(201,169,98,.05);border:2px dashed rgba(201,169,98,.25);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;color:#6B5D4A;cursor:pointer;transition:.2s;padding:8px;text-align:center}
+    .spread-slot:hover{border-color:var(--accent);background:rgba(201,169,98,.1)}
+    .spread-slot.revealed{border-style:solid;border-color:var(--accent);background:rgba(201,169,98,.12)}
+    .spread-slot .card-back{font-size:28px;margin-bottom:4px}
+    .spread-slot.revealed .card-name{color:var(--primary);font-weight:700;font-size:13px}
+    .spread-slot .card-meaning{font-size:11px;color:#8B7E6A;margin-top:4px;line-height:1.4}
+    .card-display{background:rgba(201,169,98,.08);border:1px solid rgba(201,169,98,.15);border-radius:20px;padding:20px;margin-top:20px;text-align:center}
+    .card-display .card-emoji{font-size:48px;margin-bottom:10px}
+    .card-display .card-title{font-size:20px;font-weight:800;color:var(--primary);margin-bottom:8px}
+    .card-display .card-orientation{font-size:13px;color:#8B7E6A;margin-bottom:12px}
+    .card-display .card-desc{font-size:14px;color:#C9B896;line-height:1.7}
+    @media(min-width:640px){.three{grid-template-columns:repeat(3,1fr)}.share-actions{grid-template-columns:1fr 1fr}.intro-actions{grid-template-columns:1fr 1fr}.card-spread{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:480px){.shell{padding:12px 12px 40px}.card,.q-body{padding:22px 17px}.q-body{min-height:450px}.q-header{padding:15px 16px}.q-meta{gap:7px}.q-text{font-size:19px}.choice{padding:15px 13px}.nav-btn{padding:11px 12px}.auto-hint{font-size:11px}.report-section{padding:23px 18px}.result-name{font-size:32px}.person-title{font-size:15px}.quote,.bio{font-size:17px}.card-spread{grid-template-columns:repeat(3,1fr);gap:8px}.spread-slot{font-size:11px}.spread-slot .card-back{font-size:22px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body class="locked">
+  <section class="access-gate" id="accessGate">
+    <div class="access-card">
+      <div class="lock-mark">🔮</div>
+      <div class="hero-sub">TAROT SANCTUARY · PRIVATE READING</div>
+      <h1>命运之门</h1>
+      <p>这是一份有权限的塔罗解读，请输入四位密语解锁。</p>
+      <input class="access-input" id="accessInput" type="tel" inputmode="numeric" autocomplete="one-time-code" maxlength="4" placeholder="••••" aria-label="四位访问码">
+      <button class="btn primary" id="unlockBtn">进入牌阵</button>
+      <p class="access-error" id="accessError" aria-live="polite">密语错误，请重新输入</p>
+    </div>
+  </section>
+  <main class="shell app-locked" id="appShell">
+    <section class="card intro" id="intro">
+      <div class="icon-box">🌙</div>
+      <h1 class="hero-title">塔罗<span style="color:#D4AF37">牌阵</span><br>命运之境</h1>
+      <div class="hero-sub">TAROT SANCTUARY · DESTINY REALM</div>
+      <p class="lead">通过意识流选牌，揭示你当下能量的真实面貌。三张牌，三重解读，映照过去、现在与未来的因果。</p>
+      <div class="stats">
+        <span class="stat"><b>三牌阵</b>过去·现在·未来</span>
+        <span class="stat"><b>78张</b>经典塔罗牌库</span>
+        <span class="stat"><b>正逆位</b>双重解读</span>
+        <span class="stat"><b>即时</b>深度分析</span>
+      </div>
+      <div class="info-box"><b>解读说明</b><br>这不是占卜，而是对你当前能量状态的镜像映射。没有吉凶之分，只有真实的自己。</div>
+      <div class="intro-actions"><button class="btn primary" id="startBtn">抽取你的牌阵</button><button class="btn ghost" id="browseBtn">了解牌阵原理</button></div>
+    </section>
+
+    <section class="card preference hidden" id="preference">
+      <div class="icon-box">🌟</div>
+      <div class="hero-sub">第一步 · 聚焦你的问题</div>
+      <h2>选择你最想探索的领域</h2>
+      <p class="hint">这将影响三张牌的解读重点，但不影响抽牌本身。</p>
+      <div class="choices">
+        <button class="choice theme" data-theme="love"><span class="letter">💕</span><span><strong>情感与关系</strong><small>爱情、友情、人际纠葛与情感走向</small></span></button>
+        <button class="choice theme" data-theme="career"><span class="letter">💼</span><span><strong>事业与目标</strong><small>工作方向、事业瓶颈、创业抉择</small></span></button>
+        <button class="choice theme" data-theme="destiny"><span class="letter">✨</span><span><strong>命运与人生</strong><small>人生方向、重大抉择、灵魂课题</small></span></button>
+      </div>
+      <div class="nav"><button class="btn ghost" id="prefBack">返回</button><button class="btn primary" id="prefNext" disabled>进入抽牌</button></div>
+    </section>
+
+    <section class="q-header hidden" id="quizChrome">
+      <div class="q-meta">
+        <span class="q-cat" id="stageLabel">🌙 牌阵抽取</span>
+        <span class="q-count" id="progressText">第 1 / 3 张</span>
+        <span class="q-pct" id="progressPct">33%</span>
+      </div>
+      <div class="progress-track"><i class="progress-bar" id="progressBar"></i></div>
+    </section>
+
+    <section class="q-body hidden" id="question">
+      <div class="eyebrow" id="chapterName">🌙 牌阵抽取</div>
+      <h2 class="q-text" id="questionText">集中精神，点击下方区域抽取第一张牌</h2>
+      <div class="card-spread" id="spreadArea">
+        <div class="spread-slot" data-slot="0"><div class="card-back">🌙</div><div>点击抽取</div></div>
+        <div class="spread-slot" data-slot="1"><div class="card-back">🌙</div><div>点击抽取</div></div>
+        <div class="spread-slot" data-slot="2"><div class="card-back">🌙</div><div>点击抽取</div></div>
+      </div>
+      <div class="card-display hidden" id="cardDisplay">
+        <div class="card-emoji" id="cardEmoji"></div>
+        <div class="card-title" id="cardTitle"></div>
+        <div class="card-orientation" id="cardOrientation"></div>
+        <div class="card-desc" id="cardDesc"></div>
+      </div>
+      <div class="q-nav">
+        <button class="nav-btn" id="prevBtn">上一张</button>
+        <div class="auto-hint" id="autoHint">三张牌全部抽取后自动进入解读</div>
+        <button class="nav-btn" id="nextBtn" disabled>下一张</button>
+      </div>
+    </section>
+
+    <section class="result hidden" id="result">
+      <div class="top-card" id="reportHead">
+        <div class="top-sub">你的塔罗牌阵解读</div>
+        <div class="top-icon-emoji">🌙</div>
+        <h1 class="result-name" id="resultName">三牌阵</h1>
+        <div class="person-title" id="resultTitle">过去 · 现在 · 未来</div>
+        <div class="tags" id="resultTags"></div>
+        <div class="dominant-chip" id="dominant"></div>
+        <div class="match-reason"><span class="reason-title">牌阵总谕</span><p class="quote" id="resultQuote"></p></div>
+      </div>
+      <section class="report-section">
+        <div class="section-title">01 · 第一张牌 · 过去的回响</div>
+        <div class="card-display" id="pastDisplay"></div>
+        <div class="note" style="margin-top:16px"><b>过去牌解读</b><span id="pastInterpretation"></span></div>
+      </section>
+      <section class="report-section">
+        <div class="section-title">02 · 第二张牌 · 现在的境况</div>
+        <div class="card-display" id="presentDisplay"></div>
+        <div class="note" style="margin-top:16px"><b>现在牌解读</b><span id="presentInterpretation"></span></div>
+      </section>
+      <section class="report-section">
+        <div class="section-title">03 · 第三张牌 · 未来的预示</div>
+        <div class="card-display" id="futureDisplay"></div>
+        <div class="note" style="margin-top:16px"><b>未来牌解读</b><span id="futureInterpretation"></span></div>
+      </section>
+      <section class="report-section">
+        <div class="section-title">04 · 牌阵综合指引</div>
+        <div class="three">
+          <div class="note"><b>能量主题</b><span id="energyTheme"></span></div>
+          <div class="note"><b>行动建议</b><span id="actionAdvice"></span></div>
+          <div class="note"><b>核心课题</b><span id="coreLesson"></span></div>
+        </div>
+      </section>
+      <div class="share-actions"><button class="btn primary" id="exportBtn">保存到手机相册</button><button class="btn ghost" id="restartBtn">重新抽取</button></div>
+      <p class="micro">本解读用于自我探索与能量觉察，不构成任何命运预测或专业心理咨询。</p>
+    </section>
+  </main>
+  <div class="save-modal hidden" id="saveModal" role="dialog" aria-modal="true" aria-labelledby="saveModalTitle">
+    <div class="save-panel">
+      <div class="save-panel-head"><h2 id="saveModalTitle">长按保存到手机相册</h2><button class="save-close" id="saveModalClose" type="button" aria-label="关闭">×</button></div>
+      <p class="save-tip">当前浏览器不支持直接调起系统相册。请长按下方完整结果图，选择"存储到照片/保存到相册"。</p>
+      <img class="save-preview" id="savePreview" alt="塔罗牌阵完整解读结果图">
+    </div>
+  </div>
+  <div class="toast" id="toast">图片已导出</div>
+
+  <script>
+  (() => {
+    const ACCESS_CODE="1234";
+    const THEMES={
+      love:{name:"情感与关系",energy:"情感能量",action:"在关系中保持真实与坦诚",lesson:"学会在亲密中保持独立的自我"},
+      career:{name:"事业与目标",energy:"事业能量",action:"专注于真正有价值的事情",lesson:"在竞争中找到属于自己的节奏"},
+      destiny:{name:"命运与人生",energy:"灵魂能量",action:"倾听内心的声音，跟随直觉",lesson:"接纳生命的不确定性"}
+    };
+    const MAJOR_ARCANA=[
+      {name:"愚者",emoji:"0",meaning:"纯粹的起点，无限可能",past:"你曾带着天真与勇气踏入未知",present:"你正在经历一个全新的开始",future:"未来呼唤你保持开放与冒险精神",advice:"不要害怕开始，每段旅程都从第一步开始"},
+      {name:"魔术师",emoji:"1",meaning:"创造力与意志力",past:"你曾展现出非凡的创造力与表达能力",present:"你拥有实现目标所需的一切资源",future:"善用你的意志力将想法转化为现实",advice:"相信自己内在的力量"},
+      {name:"女祭司",emoji:"2",meaning:"直觉与内在智慧",past:"你曾深入自己的内心世界寻求答案",present:"需要倾听你内在的声音与直觉",future:"内在的智慧正在引导你走向真相",advice:"在喧嚣中寻找宁静"},
+      {name:"女皇",emoji:"3",meaning:"丰盛与创造力",past:"你曾享受着生活的丰盛与美好",present:"生命正在滋养你，赐予你创造力",future:"你正在或即将迎来丰收的季节",advice:"允许自己接受丰盛"},
+      {name:"皇帝",emoji:"4",meaning:"权威与结构",past:"你曾建立起某种秩序与规则",present:"你正在面对权威与责任的课题",future:"需要建立更稳固的结构与边界",advice:"在自由与秩序间找到平衡"},
+      {name:"教皇",emoji:"5",meaning:"信仰与传统",past:"你曾受益于某种传统或信仰体系",present:"正在探索更高层次的真理",future:"传统智慧将指引你前行",advice:"尊重传统但不盲从"},
+      {name:"恋人",emoji:"6",meaning:"选择与关系",past:"你曾面临重要的选择与情感考验",present:"关系中的选择正在浮现",future:"选择的核心是忠于自己的价值观",advice:"跟随心的指引"},
+      {name:"战车",emoji:"7",meaning:"意志力与胜利",past:"你曾以坚强的意志克服困难",present:"正在驾驭复杂局面向前进",future:"胜利在望，但需要保持专注",advice:"集中精力，你所向披靡"},
+      {name:"力量",emoji:"8",meaning:"内在力量与勇气",past:"你曾以柔克刚，展现内在力量",present:"需要用勇气而非蛮力应对挑战",future:"内在的温柔力量正在觉醒",advice:"真正的力量来自内心"},
+      {name:"隐士",emoji:"9",meaning:"内省与指引",past:"你曾独自走过一段孤独的旅程",present:"需要退后一步，寻求内在指引",future:"在独处中找到智慧与答案",advice:"有时独处是最好的陪伴"},
+      {name:"命运之轮",emoji:"10",meaning:"转变与周期",past:"命运曾对你展现出意外的恩宠",present:"变化正在发生，顺应流动",future:"把握机遇，命运之轮正在转动",advice:"接受生命的变化"},
+      {name:"正义",emoji:"11",meaning:"公正与因果",past:"你曾面对选择的后果",present:"需要做出公正的决定",future:"因果法则正在运作",advice:"行动要正直，意图要清明"},
+      {name:"倒吊人",emoji:"12",meaning:"臣服与等待",past:"你曾以牺牲换取更深的理解",present:"需要学会臣服与等待",future:"在放下中获得新的视角",advice:"有时后退一步是前进的方式"},
+      {name:"死神",emoji:"13",meaning:"结束与重生",past:"某段旅程已经到达终点",present:"正在经历某种形式的结束",future:"结束是新的开始在等待",future2:"放下过去才能拥抱新生",advice:"拥抱变化是成长的必经之路"},
+      {name:"节制",emoji:"14",meaning:"平衡与调适",past:"你曾在两端之间找到平衡",present:"需要调适与平衡各方能量",future:"中道而行带来和谐",advice:"在极端之间找到中间道路"},
+      {name:"恶魔",emoji:"15",meaning:"束缚与欲望",past:"曾被某种执念或束缚困住",present:"面对深层的欲望与恐惧",future:"认出束缚你的真正源头",advice:"你比欲望更强大"},
+      {name:"塔",emoji:"16",meaning:"突变与觉醒",past:"曾经历突如其来的变化",present:"某种结构正在崩塌",future:"破而后立，觉醒随之而来",advice:"动荡中藏着觉醒的契机"},
+      {name:"星星",emoji:"17",meaning:"希望与灵感",past:"你曾怀抱美好的希望",present:"在混乱后重新连接源头",future:"希望之光正在引领你",advice:"保持信念，希望永不熄灭"},
+      {name:"月亮",emoji:"18",meaning:"潜意识与恐惧",past:"曾在黑暗中摸索，面对恐惧",present:"潜意识正在浮现被忽略的真相",future:"穿越幻象，看清真实",advice:"信任你的直觉，即使看不清晰"},
+      {name:"太阳",emoji:"19",meaning:"喜悦与成功",past:"你曾体验过纯粹的喜悦",present:"成功与活力正在充盈你",future:"阳光照耀，前路光明",advice:"拥抱生命中的欢乐时光"},
+      {name:"审判",emoji:"20",meaning:"觉醒与原谅",past:"你曾经历内心的审判与反思",present:"需要原谅自己或他人",future:"召唤你以新的方式重生",advice:"给自己一个重新开始的机会"},
+      {name:"世界",emoji:"21",meaning:"完成与圆满",past:"你已完成了一段重要的旅程",present:"正在收获努力的果实",future:"一个循环即将圆满完成",advice:"庆祝你的成就，你值得圆满"}
+    ];
+    const MINOR_ARCANA=[
+      {name:"权杖 Ace",emoji:"🪄",meaning:"新行动的热情与潜力",past:"新的行动方向正在萌生",present:"行动力正在复苏",future:"抓住机遇，勇敢行动",advice:"热情是行动的燃料"},
+      {name:"权杖二",emoji:"🪄2",meaning:"决策与突破",past:"你曾做出重要的决定",present:"正在权衡选择",future:"决定性时刻即将到来",advice:"相信你的判断力"},
+      {name:"权杖三",emoji:"🪄3",meaning:"远见与探索",past:"你曾拓展了视野",present:"正在探索新的可能",future:"更广阔的天地在等待",advice:"走出去，发现更多"},
+      {name:"权杖六",emoji:"🪄6",meaning:"胜利与认可",past:"你曾获得成功与赞誉",present:"正在走向胜利",future:"荣誉与成就将至",advice:"你配得上这份荣誉"},
+      {name:"权杖七",emoji:"🪄7",meaning:"挑战与坚持",past:"你曾在竞争中坚守",present:"面对挑战需要勇气",future:"坚持就是胜利",advice:"不要放弃，你正在赢"},
+      {name:"权杖十",emoji:"🪄10",meaning:"负担与责任",past:"你承担了重大责任",present:"压力可能过重",future:"需要学会分担",advice:"不必独自扛起一切"},
+      {name:"圣杯 Ace",emoji:"🏆",meaning:"新情感的萌芽",past:"新的情感正在生根",present:"情感充沛流动",future:"爱与连接将至",advice:"敞开心扉迎接爱"},
+      {name:"圣杯二",emoji:"🏆2",meaning:"伙伴与吸引",past:"你曾经历重要的情感连接",present:"关系中的吸引力正在增强",future:"新的联盟将形成",advice:"在关系中保持平衡"},
+      {name:"圣杯五",emoji:"🏆5",meaning:"失落与反思",past:"你曾经历失落",present:"正在反思与疗愈",future:"失落中有礼物",advice:"痛苦的另一面是成长"},
+      {name:"圣杯六",emoji:"🏆6",meaning:"怀旧与纯真",past:"美好的回忆支撑着你",present:"需要回归纯真",future:"找回内心的孩子",advice:"不要丢失那份纯真"},
+      {name:"圣杯十",emoji:"🏆10",meaning:"喜悦与和谐",past:"你曾拥有和谐的关系",present:"情感上的满足在望",future:"家庭与友谊带来快乐",advice:"珍惜身边的人"},
+      {name:"宝剑 Ace",emoji:"⚔️",meaning:"新思想与清晰",past:"新的想法正在成形",present:"思维清晰有力",future:"真相将大白",advice:"用智慧的剑斩断迷惑"},
+      {name:"宝剑二",emoji:"⚔️2",meaning:"僵局与决策",past:"你曾在选择中犹豫",present:"面对两难抉择",future:"需要做出决定",advice:"决定带来解脱"},
+      {name:"宝剑三",emoji:"⚔️3",meaning:"心痛与悲伤",past:"你曾经历心碎",present:"正在疗愈伤痛",future:"时间将治愈一切",advice:"允许自己悲伤"},
+      {name:"宝剑八",emoji:"⚔️8",meaning:"限制与自由",past:"你曾感到被困",present:"正在突破限制",future:"真相让你获得自由",advice:"挣脱内心的枷锁"},
+      {name:"宝剑十",emoji:"⚔️10",meaning:"结束与解脱",past:"最坏的已经过去",present:"正在从痛苦中解脱",future:"新的开始在等待",advice:"最黑暗的时刻之后是黎明"},
+      {name:"星币 Ace",emoji:"💰",meaning:"新机会与繁荣",past:"物质机会曾出现",present:"新的机遇在敲门",future:"稳健的繁荣将至",advice:"准备好迎接机会"},
+      {name:"星币四",emoji:"💰4",meaning:"占有与安全",past:"你曾建立安全感",present:"在占有与放手间挣扎",future:"学会分享才能拥有更多",advice:"慷慨带来更多"},
+      {name:"星币六",emoji:"💰6",meaning:"给予与接收",past:"你曾慷慨给予",present:"能量需要流动",future:"给予与接受将平衡",advice:"敞开的双手能接住更多"},
+      {name:"星币十",emoji:"💰10",meaning:"富足与传承",past:"你继承了某种丰盛",present:"正在积累财富",future:"物质与精神的双重富足",advice:"为未来播种"}
+    ];
+    const ALL_CARDS=[...MAJOR_ARCANA,...MINOR_ARCANA];
+    const SPREAD_POSITIONS=["过去","现在","未来"];
+    const SPREAD_LABELS=["回溯你的历程","映照你的当下","揭示前路方向"];
+    let currentStep=0;
+    let selectedTheme="";
+    let drawnCards=[];
+    let shuffledDeck=[...ALL_CARDS];
+
+    function shuffleDeck(){
+      for(let i=shuffledDeck.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [shuffledDeck[i],shuffledDeck[j]]=[shuffledDeck[j],shuffledDeck[i]];
+      }
+    }
+    function drawCard(){
+      if(shuffledDeck.length<3){
+        shuffledDeck=[...ALL_CARDS];
+        shuffleDeck();
+      }
+      return shuffledDeck.pop();
+    }
+    function getOrientation(){
+      return Math.random()>0.5?"正位":"逆位";
+    }
+    function getCardReading(card,orientation,position,theme){
+      const posLabel=orientation==="正位"?"":"（逆位）";
+      const reading=card[position]||card.meaning;
+      const themeAddition=THEMES[theme]||THEMES.destiny;
+      return`${posLabel}${reading}。这段能量与你关注的${themeAddition.name}紧密相连。`;
+    }
+    function updateProgress(){
+      const drawnCount=Math.min(Math.max(currentStep,0),3);
+      const pct=Math.round((drawnCount/3)*100);
+      if(drawnCount===0){
+        document.getElementById("progressText").textContent="准备抽取";
+      }else if(drawnCount<3){
+        document.getElementById("progressText").textContent=`第 ${drawnCount} / 3 张`;
+      }else{
+        document.getElementById("progressText").textContent="牌阵完成";
+      }
+      document.getElementById("progressPct").textContent=`${pct}%`;
+      document.getElementById("progressBar").style.width=`${Math.min(pct,100)}%`;
+    }
+    function showSection(id){
+      document.querySelectorAll(".card,.q-header,.q-body,.result").forEach(el=>{
+        if(el.id!=="accessGate"&&el.id!=="appShell")el.classList.add("hidden");
+      });
+      if(id==="intro"||id==="preference"||id==="question"||id==="result"){
+        document.getElementById("quizChrome").classList.toggle("hidden",id==="intro"||id==="preference");
+      }
+      if(id){
+        const target=document.getElementById(id);
+        if(target)target.classList.remove("hidden");
+      }
+    }
+    function renderCardDisplay(elementId,card,orientation,positionIndex){
+      const el=document.getElementById(elementId);
+      el.innerHTML=`
+        <div class="card-emoji">${card.emoji}</div>
+        <div class="card-title">${card.name}</div>
+        <div class="card-orientation">${orientation} · ${SPREAD_POSITIONS[positionIndex]}</div>
+        <div class="card-desc">${card.meaning}</div>
+      `;
+    }
+    function generateResult(){
+      const[card1,card2,card3]=[drawnCards[0],drawnCards[1],drawnCards[2]];
+      const[ori1,ori2,ori3]=[card1.orientation,card2.orientation,card3.orientation];
+      const theme=THEMES[selectedTheme]||THEMES.destiny;
+      const tags=[];
+      if(card1.name.includes("权杖"))tags.push("行动");
+      if(card1.name.includes("圣杯"))tags.push("情感");
+      if(card1.name.includes("宝剑"))tags.push("思维");
+      if(card1.name.includes("星币"))tags.push("物质");
+      if(card2.name.includes(" Ace")&&ori2==="正位")tags.push("新开始");
+      if(card3.name.includes("世界")||card3.name.includes("太阳"))tags.push("圆满");
+      if(card3.name.includes("死神")||card3.name.includes("塔"))tags.push("转化");
+      document.getElementById("resultTags").innerHTML=tags.map(t=>`<span class="tag">${t}</span>`).join("");
+      const dominantCard=drawnCards[Math.floor(Math.random()*3)];
+      document.getElementById("dominant").textContent=`核心牌：${dominantCard.name} ${dominantCard.orientation}`;
+      const totalArcana=Math.floor((ALL_CARDS.indexOf(card1)%22+ALL_CARDS.indexOf(card2)%22+ALL_CARDS.indexOf(card3)%22)/3);
+      const quotes=[
+        "牌阵已开，真相浮现。你的每一个选择都在书写命运的篇章。",
+        "三张牌，三重能量。过去已定，现在可变，未来在你手中。",
+        "塔罗不告诉你该怎么做，它告诉你正在发生什么。",
+        "每一次抽牌都是与内在自我的对话，答案一直在你心中。"
+      ];
+      document.getElementById("resultQuote").textContent=quotes[totalArcana%quotes.length];
+      renderCardDisplay("pastDisplay",card1,ori1,0);
+      renderCardDisplay("presentDisplay",card2,ori2,1);
+      renderCardDisplay("futureDisplay",card3,ori3,2);
+      document.getElementById("pastInterpretation").textContent=getCardReading(card1,ori1,"past",selectedTheme);
+      document.getElementById("presentInterpretation").textContent=getCardReading(card2,ori2,"present",selectedTheme);
+      document.getElementById("futureInterpretation").textContent=getCardReading(card3,ori3,"future",selectedTheme);
+      document.getElementById("energyTheme").textContent=`你的牌阵核心能量围绕${theme.energy}，${drawnCards[1].name}在当下位置显现，暗示你正经历的关键议题。`;
+      document.getElementById("actionAdvice").textContent=theme.action;
+      document.getElementById("coreLesson").textContent=theme.lesson;
+    }
+
+    document.getElementById("unlockBtn").addEventListener("click",()=>{
+      const code=document.getElementById("accessInput").value;
+      if(code===ACCESS_CODE){
+        document.body.classList.remove("locked");
+        document.getElementById("accessGate").style.display="none";
+        document.getElementById("appShell").classList.remove("app-locked");
+        shuffledDeck=[...ALL_CARDS];
+        shuffleDeck();
+      }else{
+        document.getElementById("accessError").classList.add("show");
+        document.getElementById("accessInput").value="";
+        setTimeout(()=>document.getElementById("accessError").classList.remove("show"),2000);
+      }
+    });
+    document.getElementById("accessInput").addEventListener("keyup",(e)=>{
+      if(e.key==="Enter")document.getElementById("unlockBtn").click();
+    });
+    document.getElementById("startBtn").addEventListener("click",()=>{
+      showSection("preference");
+    });
+    document.getElementById("browseBtn").addEventListener("click",()=>{
+      alert("牌阵原理简介：\\n\\n三牌阵是最经典的塔罗解读格式：\\n\\n第一张（过去）：回溯影响当下的过往事件与能量\\n第二张（现在）：映照你当前的真实状态\\n第三张（未来）：揭示可能的发展方向\\n\\n牌阵并非固定命运，而是能量流动的镜像。");
+    });
+    document.querySelectorAll(".choice.theme").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        document.querySelectorAll(".choice.theme").forEach(b=>b.classList.remove("selected"));
+        btn.classList.add("selected");
+        selectedTheme=btn.dataset.theme;
+        document.getElementById("prefNext").disabled=false;
+      });
+    });
+    document.getElementById("prefBack").addEventListener("click",()=>{
+      showSection("intro");
+    });
+      const PREFECT_NEXT_BTN=document.getElementById("prefNext");
+      const NEXT_BTN=document.getElementById("nextBtn");
+      const PREV_BTN=document.getElementById("prevBtn");
+      const AUTO_HINT=document.getElementById("autoHint");
+      const SPREAD_SLOTS=document.querySelectorAll(".spread-slot");
+
+      document.getElementById("prefNext").addEventListener("click",()=>{
+        currentStep=0;
+        drawnCards=[];
+        showSection("question");
+        updateProgress();
+        SPREAD_SLOTS.forEach((slot,i)=>{
+          slot.classList.remove("revealed");
+          slot.innerHTML=`<div class="card-back">🌙</div><div>点击抽取</div>`;
+        });
+        document.getElementById("cardDisplay").classList.add("hidden");
+        NEXT_BTN.disabled=true;
+        NEXT_BTN.textContent="下一张";
+        PREV_BTN.disabled=true;
+        AUTO_HINT.classList.remove("active");
+        AUTO_HINT.textContent="选择后自动进入下一题";
+      });
+      SPREAD_SLOTS.forEach(slot=>{
+        slot.addEventListener("click",()=>{
+          if(currentStep>=3)return;
+          const slotIndex=parseInt(slot.dataset.slot);
+          if(slotIndex!==currentStep)return;
+          if(drawnCards[slotIndex])return;
+          const card=drawCard();
+          const orientation=getOrientation();
+          card.orientation=orientation;
+          drawnCards[slotIndex]=card;
+          slot.classList.add("revealed");
+          slot.innerHTML=`<div class="card-back">${card.emoji}</div><div class="card-name">${card.name}</div><div class="card-meaning">${orientation}</div>`;
+          document.getElementById("cardEmoji").textContent=card.emoji;
+          document.getElementById("cardTitle").textContent=card.name;
+          document.getElementById("cardOrientation").textContent=`${orientation} · ${SPREAD_LABELS[slotIndex]}`;
+          document.getElementById("cardDesc").textContent=card.meaning;
+          document.getElementById("cardDisplay").classList.remove("hidden");
+          currentStep++;
+          if(currentStep<3){
+            updateProgress();
+            PREV_BTN.disabled=false;
+            NEXT_BTN.disabled=true;
+            NEXT_BTN.textContent="下一张";
+            AUTO_HINT.classList.remove("active");
+            AUTO_HINT.textContent="选择后自动进入下一题";
+          }else{
+            updateProgress();
+            PREV_BTN.disabled=false;
+            NEXT_BTN.disabled=false;
+            NEXT_BTN.textContent="进入解读";
+            AUTO_HINT.classList.add("active");
+            AUTO_HINT.textContent="三张牌已齐，点击进入解读";
+          }
+        });
+      });
+      PREV_BTN.addEventListener("click",()=>{
+        if(currentStep>0){
+          currentStep--;
+          updateProgress();
+          const card=drawnCards[currentStep];
+          if(card){
+            document.getElementById("cardEmoji").textContent=card.emoji;
+            document.getElementById("cardTitle").textContent=card.name;
+            document.getElementById("cardOrientation").textContent=`${card.orientation} · ${SPREAD_LABELS[currentStep]}`;
+            document.getElementById("cardDesc").textContent=card.meaning;
+            document.getElementById("cardDisplay").classList.remove("hidden");
+          }
+          NEXT_BTN.disabled=true;
+          NEXT_BTN.textContent="下一张";
+          AUTO_HINT.classList.remove("active");
+          AUTO_HINT.textContent="选择后自动进入下一题";
+          if(currentStep===0)PREV_BTN.disabled=true;
+        }
+      });
+      NEXT_BTN.addEventListener("click",()=>{
+        if(currentStep>=3){
+          generateResult();
+          showSection("result");
+          return;
+        }
+        if(!drawnCards[currentStep])return;
+        currentStep++;
+        updateProgress();
+        const card=drawnCards[currentStep];
+        if(card){
+          document.getElementById("cardEmoji").textContent=card.emoji;
+          document.getElementById("cardTitle").textContent=card.name;
+          document.getElementById("cardOrientation").textContent=`${card.orientation} · ${SPREAD_LABELS[currentStep]}`;
+          document.getElementById("cardDesc").textContent=card.meaning;
+          document.getElementById("cardDisplay").classList.remove("hidden");
+        }
+        PREV_BTN.disabled=false;
+        if(currentStep>=3){
+          NEXT_BTN.disabled=false;
+          NEXT_BTN.textContent="进入解读";
+          AUTO_HINT.classList.add("active");
+          AUTO_HINT.textContent="三张牌已齐，点击进入解读";
+        }else{
+          NEXT_BTN.disabled=true;
+          NEXT_BTN.textContent="下一张";
+        }
+      });
+    document.getElementById("restartBtn").addEventListener("click",()=>{
+      currentStep=0;
+      drawnCards=[];
+      selectedTheme="";
+      document.querySelectorAll(".choice.theme").forEach(b=>b.classList.remove("selected"));
+      document.getElementById("prefNext").disabled=true;
+      shuffledDeck=[...ALL_CARDS];
+      shuffleDeck();
+      showSection("intro");
+    });
+    document.getElementById("exportBtn").addEventListener("click",()=>{
+      document.getElementById("saveModal").classList.remove("hidden");
+      document.body.classList.add("locked");
+    });
+    document.getElementById("saveModalClose").addEventListener("click",()=>{
+      document.getElementById("saveModal").classList.add("hidden");
+      document.body.classList.remove("locked");
+    });
+    document.getElementById("saveModal").addEventListener("click",(e)=>{
+      if(e.target.id==="saveModal"){
+        document.getElementById("saveModal").classList.add("hidden");
+        document.body.classList.remove("locked");
+      }
+    });
+  })();
+  </script>
+</body>
+</html>
