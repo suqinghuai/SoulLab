@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="theme-color" content="#E8E4F2">
+  <title>心理自测｜抑郁情绪筛查</title>
+  <style>
+    :root{--ink:#2D2458;--muted:#8880B0;--primary:#6B5DB8;--accent:#7B68C8;--bg:#E8E4F2;--line:#DDD8EE;--paper:rgba(255,255,255,.9);--soft:#F7F4FD;--shadow:0 4px 20px rgba(107,93,184,.1)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;background:linear-gradient(145deg,#E8E4F2,#EFEAF7 55%,#E4DFEF);color:var(--ink);font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+    button,input{font:inherit}
+    button{color:inherit}
+    h1,h2,p{margin-top:0}
+    .shell{width:100%;max-width:680px;margin:auto;padding:20px 16px 56px}
+    .hidden{display:none!important}
+    .card,.q-header,.q-body,.top-card,.report-section{background:var(--paper);box-shadow:var(--shadow);border:1px solid rgba(107,93,184,.08)}
+    .card{border-radius:24px;padding:24px 22px;margin-bottom:18px}
+    .icon-box{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,var(--accent),var(--primary));display:flex;align-items:center;justify-content:center;font-size:34px;color:#fff;margin:14px auto 16px;box-shadow:0 8px 28px rgba(107,93,184,.35)}
+    .hero-title{font-size:26px;font-weight:900;text-align:center;line-height:1.35;margin-bottom:7px}
+    .hero-title em{font-style:normal;color:var(--primary)}
+    .hero-sub{font-size:12px;color:#9180CC;letter-spacing:3px;font-weight:700;text-align:center;margin-bottom:22px}
+    .lead{font-size:14px;color:#615985;line-height:1.8;text-align:center;margin-bottom:20px}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 18px}
+    .stat{background:rgba(255,255,255,.86);border-radius:18px;padding:15px 10px;text-align:center;box-shadow:0 2px 14px rgba(107,93,184,.08);color:#756D9E;font-size:12px}
+    .stat b{display:block;font-size:18px;color:var(--primary);margin-bottom:3px}
+    .info-box{background:rgba(255,255,255,.65);border-left:3px solid var(--primary);border-radius:14px;padding:13px 16px;color:#5D5682;font-size:13px;line-height:1.7;margin-bottom:18px}
+    .info-box.warn{border-left-color:#F59E0B;background:rgba(255,248,230,.7);color:#7C5A12}
+    .info-box.danger{border-left-color:#EF4444;background:rgba(254,226,226,.7);color:#991B1B}
+    .eyebrow{font-size:13px;color:var(--primary);font-weight:800;letter-spacing:.08em;margin-bottom:8px}
+    .hint{font-size:13px;color:var(--muted);line-height:1.7}
+    .btn{border:none;border-radius:16px;padding:15px 20px;cursor:pointer;font-weight:800;transition:.15s transform,.15s box-shadow,.15s background}
+    .btn:hover{transform:translateY(-2px)}
+    .btn:focus-visible,.choice:focus-visible,.nav-btn:focus-visible{outline:3px solid rgba(123,104,200,.22);outline-offset:3px}
+    .primary{width:100%;background:linear-gradient(135deg,var(--accent),var(--primary));color:#fff;box-shadow:0 8px 24px rgba(107,93,184,.35);font-size:17px;letter-spacing:1px}
+    .ghost{width:100%;background:rgba(255,255,255,.85);border:2px solid var(--line);color:#5A5190}
+    .intro-actions{display:grid;gap:10px}
+    .choices{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+    .choice{width:100%;border:2px solid #E2DCF5;border-radius:16px;background:var(--soft);padding:16px 18px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px;transition:.16s all}
+    .choice:hover{border-color:var(--accent);background:rgba(123,104,200,.06);transform:translateX(3px)}
+    .choice.selected{border-color:var(--accent);background:rgba(123,104,200,.1);color:var(--primary);box-shadow:0 0 0 3px rgba(123,104,200,.08)}
+    .choice .letter{width:22px;flex:0 0 22px;color:var(--accent);font-size:18px;font-weight:900;text-align:center}
+    .answer .letter{font-size:0}
+    .answer .letter:before{content:"○";font-size:19px}
+    .answer.selected .letter:before{content:"●"}
+    .choice strong{font-size:15px;display:block}
+    .choice small{display:block;color:#8D86AE;margin-top:4px;font-size:12px;line-height:1.45}
+    .nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:20px}
+    .nav .btn{width:auto}
+    .nav .btn[disabled],.nav-btn[disabled]{opacity:.35;cursor:not-allowed;transform:none}
+    .q-header{border-radius:20px;padding:16px 20px;margin-bottom:20px}
+    .q-meta{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;margin-bottom:10px}
+    .q-cat{font-size:13px;font-weight:800;color:var(--primary)}
+    .q-count{font-size:13px;color:var(--muted)}
+    .q-pct{font-size:13px;font-weight:800;color:var(--accent)}
+    .progress-track{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+    .progress-bar{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--primary));border-radius:99px;transition:width .38s ease}
+    .q-body{border-radius:24px;padding:28px 24px;margin-bottom:18px;min-height:480px}
+    .q-text{font-size:20px;font-weight:900;line-height:1.5;margin:10px 0 22px}
+    .q-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:22px}
+    .nav-btn{padding:12px 17px;border-radius:14px;border:2px solid var(--line);background:rgba(255,255,255,.86);cursor:pointer;font-size:14px;color:#746C9A}
+    .auto-hint{font-size:12px;color:#9B94C8;flex:1;text-align:center;line-height:1.4;transition:.2s}
+    .auto-hint.active{color:var(--primary);font-weight:700}
+    .result{padding:0}
+    .top-card{border-radius:28px;padding:30px 24px 26px;text-align:center;margin-bottom:18px}
+    .top-sub{font-size:15px;color:var(--accent);font-weight:700;margin-bottom:12px;letter-spacing:1px}
+    .top-icon-emoji{font-size:44px;margin-bottom:5px}
+    .score-number{font-size:72px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.05}
+    .score-unit{font-size:18px;color:var(--muted);font-weight:600;margin-left:4px}
+    .result-title{font-size:28px;font-weight:900;margin:14px 0 6px}
+    .result-desc{font-size:15px;color:#8279AE;margin-bottom:16px;line-height:1.6}
+    .level-badge{display:inline-block;margin:10px 0 0;padding:8px 18px;border-radius:20px;background:#F1EDF9;color:var(--primary);font-size:14px;font-weight:700}
+    .level-badge.mild{background:#FEF3C7;color:#B45309}
+    .level-badge.moderate{background:#FED7AA;color:#C2410C}
+    .level-badge.severe{background:#FEE2E2;color:#B91C1C}
+    .summary{background:linear-gradient(135deg,rgba(232,228,242,.8),rgba(237,234,245,.6));border-radius:16px;padding:15px 18px;text-align:left;margin-top:16px;border:1px solid rgba(107,93,184,.1)}
+    .summary-title{font-size:15px;font-weight:800;color:var(--primary);display:block;margin-bottom:8px}
+    .summary-text{font-size:16px;color:#514A75;line-height:1.85;margin:0}
+    .report-section{border-radius:24px;padding:23px;margin-bottom:18px}
+    .section-title{font-size:19px;font-weight:900;margin-bottom:16px}
+    .total-bar-wrap{margin-bottom:8px}
+    .total-bar{height:12px;background:#F0EDF8;border-radius:99px;overflow:hidden}
+    .total-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#86EFAC,#FACC15,#FB923C,#EF4444);transition:width .6s ease}
+    .total-labels{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;font-size:11px;color:var(--muted);margin-top:6px}
+    .symptom-list{display:flex;flex-direction:column;gap:10px}
+    .symptom-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;background:#FAF8FF;border:1px solid #E2DCF5;border-radius:14px;padding:12px 16px}
+    .symptom-text{font-size:14px;color:#514A75;line-height:1.5}
+    .symptom-score{font-weight:800;font-size:16px;color:var(--primary);white-space:nowrap}
+    .symptom-score.low{color:#10B981}
+    .symptom-score.mid{color:#F59E0B}
+    .symptom-score.high{color:#EF4444}
+    .three{display:grid;grid-template-columns:1fr;gap:12px}
+    .note{background:#FAF8FF;border:1px solid #E2DCF5;border-radius:17px;padding:18px 17px;line-height:1.8;color:#625B86;font-size:16px}
+    .note b{display:block;color:var(--ink);margin-bottom:7px;font-size:17px}
+    .crisis-card{background:linear-gradient(135deg,#FEF2F2,#FFEDD5);border:2px solid #EF4444;border-radius:20px;padding:20px;margin-bottom:18px;text-align:center}
+    .crisis-card h3{color:#B91C1C;font-size:18px;margin-bottom:10px;font-weight:900}
+    .crisis-card p{color:#7F1D1D;font-size:15px;margin-bottom:8px;line-height:1.7}
+    .crisis-phone{font-size:22px;font-weight:900;color:#B91C1C;letter-spacing:2px;margin:10px 0}
+    .share-actions{display:grid;gap:10px;margin:22px 0}
+    .toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);width:max-content;max-width:min(520px,calc(100% - 32px));background:#2D2458;color:#fff;padding:11px 18px;border-radius:18px;text-align:center;line-height:1.6;opacity:0;pointer-events:none;transition:.25s;z-index:30}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    .micro{font-size:13px;color:#8D86AE;text-align:center;line-height:1.65}
+    body.locked{overflow:hidden}
+    .app-locked{display:none}
+    .access-gate{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:20px;background:linear-gradient(145deg,#E8E4F2,#EFEAF7)}
+    .access-card{width:min(460px,100%);background:rgba(255,255,255,.9);border-radius:24px;padding:28px 24px;text-align:center;box-shadow:var(--shadow)}
+    .lock-mark{width:72px;height:72px;border-radius:20px;margin:0 auto 18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--primary));color:#fff;font-size:32px;box-shadow:0 8px 28px rgba(107,93,184,.35)}
+    .access-card h1{font-size:25px;margin-bottom:8px}
+    .access-card p{color:var(--muted);font-size:13px;line-height:1.7}
+    .access-input{display:block;width:100%;margin:20px auto 14px;padding:14px;border:2px solid var(--line);border-radius:14px;background:#fff;text-align:center;font-size:28px;font-weight:800;letter-spacing:12px;color:var(--primary);outline:0}
+    .access-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(123,104,200,.15)}
+    .access-error{min-height:22px;margin:10px 0 0!important;color:#EF4444!important;font-size:13px;opacity:0}
+    .access-error.show{opacity:1}
+    .access-notice{margin:16px auto 0;color:#9B94C8;font-size:12px;line-height:1.6;max-width:380px;text-align:center}
+    .access-notice strong{color:#EF4444}
+    @media(min-width:640px){.three{grid-template-columns:repeat(3,1fr)}.share-actions{grid-template-columns:1fr 1fr}.intro-actions{grid-template-columns:1fr 1fr}}
+    @media(max-width:480px){.shell{padding:12px 12px 40px}.card,.q-body{padding:22px 17px}.q-body{min-height:520px}.q-header{padding:15px 16px}.q-meta{gap:7px}.q-text{font-size:18px}.choice{padding:15px 13px}.nav-btn{padding:11px 12px}.auto-hint{font-size:11px}.report-section{padding:23px 18px}.result-title{font-size:26px}.quote,.bio{font-size:17px}.symptom-text{font-size:13px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body class="locked">
+  <section class="access-gate" id="accessGate">
+    <div class="access-card">
+      <div class="lock-mark">🔐</div>
+      <div class="hero-sub">MOOD SCREENING · PRIVATE</div>
+      <h1>访问验证</h1>
+      <p>这是一份严谨的心境筛查测试，请输入四位访问码解锁。测试结果仅供参考，不构成医学诊断。</p>
+      <input class="access-input" id="accessInput" type="tel" inputmode="numeric" autocomplete="one-time-code" maxlength="4" placeholder="••••" aria-label="四位访问码">
+      <button class="btn primary" id="unlockBtn">立即解锁</button>
+      <p class="access-error" id="accessError" aria-live="polite">访问码错误，请重新输入</p>
+      <p class="access-notice">本测试基于 PHQ-9 标准量表，仅供自我筛查参考，不能替代专业诊断。<strong>如有自伤意念，请立即拨打 120 或前往最近医院急诊。</strong></p>
+    </div>
+  </section>
+  <main class="shell app-locked" id="appShell">
+    <section class="card intro" id="intro">
+      <div class="icon-box">🌙</div>
+      <h1 class="hero-title">心境<em>自测</em><br>抑郁情绪筛查</h1>
+      <div class="hero-sub">PHQ-9 · MOOD SCREENING</div>
+      <p class="lead">基于临床通用的 PHQ-9 患者健康问卷，通过 9 道题目帮助你了解近两周的情绪状态。答案无对错之分，请凭第一感觉作答。</p>
+      <div class="stats">
+        <span class="stat"><b>9 道题</b>标准筛查量表</span>
+        <span class="stat"><b>2 分钟</b>快速完成</span>
+        <span class="stat"><b>五档解读</b>专业分段</span>
+        <span class="stat"><b>完全私密</b>本地计算</span>
+      </div>
+      <div class="info-box warn"><b>⚠️ 重要提醒</b><br>本测试是自我筛查工具，不能替代医生诊断。如果测试结果提示中重度抑郁倾向，或你有自伤/自杀念头，请务必联系专业心理医生或前往医院精神科就诊。全国心理援助热线：<b style="color:#B45309">400-161-9995</b> / <b style="color:#B45309">010-82951332</b></div>
+      <div class="info-box"><b>测试说明</b><br>请回想 <b>过去两周内</b> 以下情况出现的频率，选择最符合你真实感受的一项。没有标准答案，请诚实作答。</div>
+      <div class="intro-actions"><button class="btn primary" id="startBtn">开始测试</button><button class="btn ghost" id="browseBtn">了解 PHQ-9 量表</button></div>
+    </section>
+
+    <section class="q-header hidden" id="quizChrome">
+      <div class="q-meta">
+        <span class="q-cat" id="stageLabel">🌙 情绪状态</span>
+        <span class="q-count" id="progressText">1 / 9</span>
+        <span class="q-pct" id="progressPct">11%</span>
+      </div>
+      <div class="progress-track"><i class="progress-bar" id="progressBar"></i></div>
+    </section>
+
+    <section class="q-body hidden" id="question">
+      <div class="eyebrow" id="chapterName">🌙 情绪状态</div>
+      <h2 class="q-text" id="questionText"></h2>
+      <div class="choices" id="answerList"></div>
+      <div class="q-nav">
+        <button class="nav-btn" id="prevBtn">上一题</button>
+        <div class="auto-hint" id="autoHint">选择后自动进入下一题</div>
+        <button class="nav-btn" id="nextBtn" disabled>下一题</button>
+      </div>
+    </section>
+
+    <section class="result hidden" id="result">
+      <div class="top-card" id="reportHead">
+        <div class="top-sub">你的心境筛查结果</div>
+        <div class="top-icon-emoji" id="topEmoji">🌙</div>
+        <div><span class="score-number" id="scoreNumber">0</span><span class="score-unit">/ 27</span></div>
+        <h1 class="result-title" id="levelTitle"></h1>
+        <div class="result-desc" id="resultDesc"></div>
+        <div class="level-badge" id="levelBadge"></div>
+        <div class="summary">
+          <span class="summary-title">筛查解读</span>
+          <p class="summary-text" id="summaryText"></p>
+        </div>
+      </div>
+
+      <section class="report-section">
+        <div class="section-title">01 · 总分与量表分段</div>
+        <div class="total-bar-wrap">
+          <div class="total-bar"><i id="totalBar"></i></div>
+          <div class="total-labels">
+            <span>0-4</span><span>5-9</span><span>10-14</span><span>15-19</span><span>20-27</span>
+          </div>
+        </div>
+        <div class="symptom-list" id="scoreBreakdown" style="margin-top:18px"></div>
+      </section>
+
+      <section class="report-section">
+        <div class="section-title">02 · 各题明细</div>
+        <div class="symptom-list" id="symptomList"></div>
+      </section>
+
+      <section class="report-section" id="suggestionSection">
+        <div class="section-title">03 · 建议与应对</div>
+        <div class="three" id="suggestionGrid"></div>
+      </section>
+
+      <section class="report-section" id="crisisSection" style="display:none">
+        <div class="crisis-card">
+          <h3>🆘 你正处于高风险状态，请立即寻求帮助</h3>
+          <p>如果你最近出现过 <b>自伤、自杀的念头或行为</b>，请不要一个人扛着。请立即联系身边可信的人，或拨打以下援助热线：</p>
+          <div class="crisis-phone">全国心理援助热线<br><span style="font-size:26px">400-161-9995</span></div>
+          <p style="font-size:13px;color:#991B1B;margin-top:12px">北京心理危机研究与干预中心：<b>010-82951332</b><br>紧急情况请直接拨打 <b>120</b> 或前往最近医院急诊</p>
+        </div>
+      </section>
+
+      <div class="share-actions"><button class="btn primary" id="exportBtn">保存结果</button><button class="btn ghost" id="restartBtn">重新测试</button></div>
+      <p class="micro">本测试基于 PHQ-9 (Patient Health Questionnaire-9) 标准量表，用于抑郁症状的筛查。PHQ-9 由 Kroenke, Spitzer & Williams (2001) 开发，已获得广泛的临床研究验证。本工具仅供自我了解参考，不构成任何医学诊断。</p>
+    </section>
+  </main>
+  <div class="toast" id="toast"></div>
+
+  <script>
+  (() => {
+    const ACCESS_CODE = "0523";
+
+    const QUESTIONS = [
+      {cat:"🌙 情绪状态", text:"做事提不起劲或没有兴趣", key:"兴趣丧失"},
+      {cat:"🌙 情绪状态", text:"感到心情低落、沮丧或绝望", key:"情绪低落"},
+      {cat:"😴 睡眠与精力", text:"入睡困难、睡不安稳或睡眠过多", key:"睡眠问题"},
+      {cat:"😴 睡眠与精力", text:"感觉疲倦或没有活力", key:"精力不足"},
+      {cat:"🍽️ 食欲与体重", text:"食欲不振或吃太多", key:"食欲变化"},
+      {cat:"🧠 思维与自我", text:"觉得自己很糟或让家人失望", key:"自我否定"},
+      {cat:"🧠 思维与自我", text:"难以集中注意力，比如看报或看电视", key:"注意力困难"},
+      {cat:"💢 行为与感受", text:"动作或说话速度缓慢到别人已察觉，或刚好相反——变得坐立不安、烦躁", key:"行为异常"},
+      {cat:"⚠️ 关键信号", text:"有不如死掉或用某种方式伤害自己的念头", key:"自伤念头"}
+    ];
+
+    const OPTIONS = [
+      {label:"完全不会", score:0, small:"过去两周内从未出现"},
+      {label:"几天", score:1, small:"出现过 1-2 天"},
+      {label:"一半以上天数", score:2, small:"出现过 3-7 天"},
+      {label:"几乎每天", score:3, small:"出现过 8 天以上"}
+    ];
+
+    const LEVELS = [
+      {max:4, title:"无明显抑郁倾向", badge:"", emoji:"🌿", desc:"近两周情绪状态平稳",
+       summary:"你的情绪状态总体良好。在过去两周内，抑郁相关症状较少出现。继续保持规律作息、适度运动和良好的社交连接，这些都是维护心理健康的有效方式。",
+       tags:[
+         {title:"情绪自检", body:"好的心理状态需要持续关注。建议每月或在感到压力较大时，重新做一次筛查。"},
+         {title:"继续保持", body:"你目前的状态说明应对机制运作良好，继续保持让你感到充实的活动和关系。"},
+         {title:"风险提示", body:"PHQ-9 得分较低不代表完全没有心理困扰。如果出现持续的情绪低落，请及时关注。"}
+       ]},
+      {max:9, title:"轻度抑郁", badge:"mild", emoji:"🌤️", desc:"情绪有些低落，但尚可应对",
+       summary:"你可能正在经历轻度的情绪困扰。这种状态在压力事件后很常见，不必过度担心。建议先尝试自我调节，如规律运动、充足睡眠、与信任的人倾诉。如果持续两周以上没有改善，建议寻求专业心理咨询。",
+       tags:[
+         {title:"自我调节", body:"每天散步 30 分钟、保持规律作息、写情绪日记，这些简单的方法被证明有效。"},
+         {title:"社会支持", body:"不要独自承受。找一位信任的朋友或家人，告诉他们你的感受。"},
+         {title:"何时就医", body:"如果症状持续超过两周，或开始影响工作学习生活，请考虑预约心理咨询。"}
+       ]},
+      {max:14, title:"中度抑郁", badge:"moderate", emoji:"☁️", desc:"情绪困扰明显，值得认真对待",
+       summary:"你的筛查结果显示中度抑郁倾向。这表明抑郁症状已经明显影响到你的日常生活。建议尽快寻求专业心理咨询师或精神科医生的帮助。同时，规律运动、光照治疗（每天晒太阳 20 分钟）、减少酒精摄入都可能有所帮助。",
+       tags:[
+         {title:"专业帮助", body:"中度抑郁很难仅靠自我调节缓解。请预约心理咨询师或前往医院精神科就诊。"},
+         {title:"日常照料", body:"优先保证充足睡眠和规律三餐。即使没有胃口，也要保持基本饮食。"},
+         {title:"亲友支持", body:"告诉身边人你的状态，让他们帮忙分担一些事务，不要硬撑。"}
+       ]},
+      {max:19, title:"中重度抑郁", badge:"severe", emoji:"⛈️", desc:"情绪低落较为严重，请尽快就医",
+       summary:"你的筛查结果显示中重度抑郁倾向。这是一个需要严肃对待的信号。请尽快预约精神科医生进行评估，考虑药物治疗或心理治疗。在此期间，请确保自身安全，避免独自接触危险物品或处于危险环境中。",
+       tags:[
+         {title:"尽快就医", body:"强烈建议一周内前往精神科或心理科就诊，获取专业诊断和治疗方案。"},
+         {title:"安全优先", body:"告知家人或朋友你的状态，避免独处。如果出现自伤念头，请立即拨打援助热线。"},
+         {title:"药物+心理", body:"中重度抑郁通常需要药物治疗配合心理治疗。药物可以帮助恢复基本情绪调节能力。"}
+       ]},
+      {max:27, title:"重度抑郁", badge:"severe", emoji:"🌀", desc:"情绪困扰严重，请立即寻求帮助",
+       summary:"你的筛查结果显示重度抑郁倾向。请将此视为一个紧急信号。请立即联系精神科医生或前往最近医院急诊，你可能需要住院治疗或调整药物。请不要独自承受，你值得被帮助。",
+       tags:[
+         {title:"立即就医", body:"请在 24 小时内前往医院急诊或精神科。重度抑郁需要专业医疗干预。"},
+         {title:"确保安全", body:"请确保身边有人陪伴，远离可能造成伤害的物品和环境。"},
+         {title:"接受治疗", body:"重度抑郁是可以治疗的。抗抑郁药物和专业心理干预可以帮助你走出困境。"}
+       ]}
+    ];
+
+    const CRISIS_THRESHOLD = 1;
+
+    const state = { index: 0, answers: [], advanceTimer: null, score: 0, level: null };
+    const $ = s => document.querySelector(s);
+    const intro = $("#intro");
+    const question = $("#question");
+    const result = $("#result");
+    const chrome = $("#quizChrome");
+
+    function unlock() {
+      const input = $("#accessInput"), error = $("#accessError");
+      if (input.value.trim() !== ACCESS_CODE) {
+        error.classList.add("show"); input.value = ""; input.focus(); return;
+      }
+      $("#accessGate").classList.add("hidden");
+      $("#appShell").classList.remove("app-locked");
+      document.body.classList.remove("locked");
+      error.classList.remove("show");
+      window.scrollTo(0, 0);
+    }
+
+    $("#unlockBtn").onclick = unlock;
+    $("#accessInput").addEventListener("keydown", e => { if (e.key === "Enter") unlock(); });
+
+    const accessParam = new URLSearchParams(location.search).get("code");
+    if (accessParam) { $("#accessInput").value = accessParam; setTimeout(unlock, 120); }
+
+    const show = el => { [intro, question, result].forEach(x => x.classList.add("hidden")); el.classList.remove("hidden"); window.scrollTo({ top: 0, behavior: "smooth" }); };
+    function setChrome(on) { chrome.classList.toggle("hidden", !on); }
+
+    $("#startBtn").onclick = () => {
+      state.answers = Array(QUESTIONS.length).fill(null);
+      state.index = 0;
+      state.score = 0;
+      state.level = null;
+      setChrome(true);
+      show(question);
+      renderQuestion();
+    };
+
+    $("#browseBtn").onclick = () => {
+      announce("PHQ-9（Patient Health Questionnaire-9）是由 Kroenke、Spitzer 和 Williams 于 2001 年开发的抑郁筛查量表，已被全球临床广泛使用。它只有 9 道题，涵盖情绪低落、兴趣丧失、睡眠问题、精力不足等核心抑郁症状。分数范围 0-27 分，分数越高表示抑郁症状越明显。", 6800);
+    };
+
+    function announce(message, duration = 2200) {
+      const toast = $("#toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => toast.classList.remove("show"), duration);
+    }
+
+    $("#prevBtn").onclick = () => {
+      if (state.index === 0) { show(intro); setChrome(false); }
+      else { state.index--; renderQuestion(); }
+    };
+
+    function advanceQuestion() {
+      clearTimeout(state.advanceTimer);
+      if (state.answers[state.index] === null) return;
+      if (state.index < QUESTIONS.length - 1) {
+        state.index++;
+        renderQuestion();
+        requestAnimationFrame(() => question.scrollIntoView({ behavior: "smooth", block: "start" }));
+      } else {
+        finish();
+      }
+    }
+
+    $("#nextBtn").onclick = advanceQuestion;
+
+    function updateChrome(i, label) {
+      const n = Math.max(1, i + 1), total = QUESTIONS.length, pct = Math.round(n / total * 100);
+      $("#progressText").textContent = `${n} / ${total}`;
+      $("#progressBar").style.width = `${pct}%`;
+      $("#progressPct").textContent = `${pct}%`;
+      $("#stageLabel").textContent = label || QUESTIONS[i].cat;
+    }
+
+    function renderQuestion() {
+      const i = state.index, q = QUESTIONS[i];
+      updateChrome(i, q.cat);
+      $("#chapterName").textContent = q.cat;
+      $("#questionText").textContent = `${i + 1}. ${q.text}`;
+      $("#answerList").innerHTML = OPTIONS.map((o, j) =>
+        `<button class="choice answer ${state.answers[i] === j ? "selected" : ""}" data-i="${j}">
+           <span class="letter">●</span>
+           <span>
+             <strong>${o.label}</strong>
+             <small>${o.small} · ${o.score} 分</small>
+           </span>
+         </button>`
+      ).join("");
+      $("#autoHint").textContent = state.answers[i] === null ? "选择后自动进入下一题" : "本题已选择，可重新选择";
+      $("#autoHint").classList.toggle("active", state.answers[i] !== null);
+      document.querySelectorAll(".answer").forEach(btn => btn.onclick = () => {
+        state.answers[i] = +btn.dataset.i;
+        document.querySelectorAll(".answer").forEach(x => x.classList.remove("selected"));
+        btn.classList.add("selected");
+        $("#nextBtn").disabled = false;
+        $("#autoHint").textContent = i === QUESTIONS.length - 1 ? "已选择，正在生成结果…" : "已选择，正在进入下一题…";
+        $("#autoHint").classList.add("active");
+        clearTimeout(state.advanceTimer);
+        state.advanceTimer = setTimeout(advanceQuestion, 380);
+      });
+      $("#nextBtn").disabled = state.answers[i] === null;
+      $("#nextBtn").textContent = i === QUESTIONS.length - 1 ? "生成结果" : "下一题";
+    }
+
+    function finish() {
+      state.score = state.answers.reduce((sum, a) => sum + OPTIONS[a].score, 0);
+      state.level = LEVELS.find(l => state.score <= l.max) || LEVELS[LEVELS.length - 1];
+
+      $("#scoreNumber").textContent = state.score;
+      $("#levelTitle").textContent = state.level.title;
+      $("#resultDesc").textContent = state.level.desc;
+      $("#summaryText").textContent = state.level.summary;
+      $("#levelBadge").textContent = `PHQ-9 · ${state.score} 分 · ${state.level.title}`;
+      $("#levelBadge").className = "level-badge " + (state.level.badge || "");
+      $("#topEmoji").textContent = state.level.emoji;
+
+      $("#totalBar").style.width = `${(state.score / 27) * 100}%`;
+
+      $("#scoreBreakdown").innerHTML = LEVELS.map(l => {
+        const isCurrent = l === state.level;
+        return `<div class="symptom-row" style="${isCurrent ? "border-color:var(--primary);background:rgba(123,104,200,.08)" : ""}">
+          <span class="symptom-text">${l.max <= 4 ? "0-4" : LEVELS.indexOf(l) === 1 ? "5-9" : LEVELS.indexOf(l) === 2 ? "10-14" : LEVELS.indexOf(l) === 3 ? "15-19" : "20-27"} 分 · ${l.title}</span>
+          <span class="symptom-score ${isCurrent ? "" : "low"}">${isCurrent ? "← 你的结果" : ""}</span>
+        </div>`;
+      }).join("");
+
+      $("#symptomList").innerHTML = QUESTIONS.map((q, i) => {
+        const ans = OPTIONS[state.answers[i]];
+        const cls = ans.score === 0 ? "low" : ans.score <= 1 ? "low" : ans.score === 2 ? "mid" : "high";
+        return `<div class="symptom-row">
+          <span class="symptom-text"><b style="color:var(--ink)">${q.key}</b> · ${q.text}</span>
+          <span class="symptom-score ${cls}">${ans.label}</span>
+        </div>`;
+      }).join("");
+
+      $("#suggestionGrid").innerHTML = state.level.tags.map(t =>
+        `<div class="note"><b>${t.title}</b>${t.body}</div>`
+      ).join("");
+
+      const hasCrisis = state.answers[8] >= CRISIS_THRESHOLD;
+      $("#crisisSection").style.display = hasCrisis ? "" : "none";
+
+      setChrome(false);
+      show(result);
+
+      sessionStorage.setItem("phq9Result", JSON.stringify({ score: state.score, level: state.level.title, answers: state.answers }));
+    }
+
+    $("#restartBtn").onclick = () => {
+      state.index = 0; state.answers = []; state.score = 0; state.level = null;
+      setChrome(false); show(intro); window.scrollTo(0, 0);
+    };
+
+    $("#exportBtn").onclick = () => {
+      if (state.score === 0 && state.answers.every(a => a === null)) {
+        announce("请先完成测试"); return;
+      }
+      announce("测试结果已保存在本地（不会上传到服务器）");
+    };
+
+    window.addEventListener("beforeunload", () => {
+      clearTimeout(state.advanceTimer);
+    });
+  })();
+  </script>
+</body>
+</html>
